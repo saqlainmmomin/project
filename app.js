@@ -364,21 +364,6 @@ class RSVPReader {
 
             this.updateProgress();
             this.updateWordCounter();
-
-            // Adjust font size based on word length
-            const baseSize = 3.5;
-            const wordLength = word.length;
-            let fontSize = baseSize;
-
-            if (wordLength > 15) {
-                fontSize = baseSize * 0.6;
-            } else if (wordLength > 10) {
-                fontSize = baseSize * 0.75;
-            } else if (wordLength > 7) {
-                fontSize = baseSize * 0.9;
-            }
-
-            this.wordDisplay.style.fontSize = `${fontSize}rem`;
         }
     }
 
