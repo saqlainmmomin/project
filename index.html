@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSVP Speed Reader</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ RSVP Speed Reader</h1>
+            <p class="subtitle">Train your brain to read faster</p>
+        </header>
+
+        <div class="input-section">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="text">Paste Text</button>
+                <button class="tab-btn" data-tab="url">From URL</button>
+            </div>
+
+            <div class="tab-content active" id="text-tab">
+                <textarea
+                    id="textInput"
+                    placeholder="Paste your article or text here..."
+                    rows="8"
+                ></textarea>
+            </div>
+
+            <div class="tab-content" id="url-tab">
+                <div class="url-input-group">
+                    <input
+                        type="url"
+                        id="urlInput"
+                        placeholder="https://example.com/article"
+                    >
+                    <button id="fetchBtn" class="btn btn-secondary">Fetch</button>
+                </div>
+                <div id="urlStatus" class="status-message"></div>
+            </div>
+        </div>
+
+        <div class="reader-section">
+            <div class="display-box">
+                <div id="wordDisplay" class="word-display">
+                    Start Reading
+                </div>
+                <div id="progressBar" class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <div id="wordCounter" class="word-counter">0 / 0</div>
+            </div>
+
+            <div class="controls">
+                <button id="playBtn" class="btn btn-primary">
+                    <span class="btn-icon">▶</span> Play
+                </button>
+                <button id="pauseBtn" class="btn btn-secondary" disabled>
+                    <span class="btn-icon">⏸</span> Pause
+                </button>
+                <button id="resetBtn" class="btn btn-secondary">
+                    <span class="btn-icon">↺</span> Reset
+                </button>
+            </div>
+
+            <div class="speed-control">
+                <label for="wpmSlider">
+                    <span class="label-text">Reading Speed</span>
+                    <span id="wpmValue" class="wpm-value">250 WPM</span>
+                </label>
+                <input
+                    type="range"
+                    id="wpmSlider"
+                    min="100"
+                    max="1000"
+                    value="250"
+                    step="25"
+                    class="slider"
+                >
+                <div class="speed-labels">
+                    <span>Slow (100)</span>
+                    <span>Fast (1000)</span>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>💡 Tip: Start slow and gradually increase your reading speed</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
