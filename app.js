@@ -16,12 +16,24 @@ class RSVPReader {
         this.urlStatus = document.getElementById('urlStatus');
         this.tabBtns = document.querySelectorAll('.tab-btn');
 
+        // Progressive speed controls
+        this.progressiveMode = document.getElementById('progressiveMode');
+        this.fixedSpeedControl = document.getElementById('fixedSpeedControl');
+        this.progressiveSpeedControl = document.getElementById('progressiveSpeedControl');
+        this.startWpmSlider = document.getElementById('startWpmSlider');
+        this.startWpmValue = document.getElementById('startWpmValue');
+        this.targetWpmSlider = document.getElementById('targetWpmSlider');
+        this.targetWpmValue = document.getElementById('targetWpmValue');
+
         // State
         this.words = [];
         this.currentWordIndex = 0;
         this.isPlaying = false;
         this.intervalId = null;
         this.wpm = 250;
+        this.startWpm = 200;
+        this.targetWpm = 400;
+        this.isProgressiveMode = false;
 
         // Initialize
         this.init();
@@ -43,6 +55,11 @@ class RSVPReader {
             if (e.key === 'Enter') this.fetchFromURL();
         });
 
+        // Progressive mode toggle
+        this.progressiveMode.addEventListener('change', (e) => this.toggleProgressiveMode(e.target.checked));
+        this.startWpmSlider.addEventListener('input', (e) => this.updateStartWPM(e.target.value));
+        this.targetWpmSlider.addEventListener('input', (e) => this.updateTargetWPM(e.target.value));
+
         // Load text from textarea on change
         this.textInput.addEventListener('input', () => {
             this.loadText(this.textInput.value);
@@ -50,6 +67,51 @@ class RSVPReader {
 
         // Load sample text
         this.loadSampleText();
+    }
+
+    toggleProgressiveMode(enabled) {
+        this.isProgressiveMode = enabled;
+
+        if (enabled) {
+            this.fixedSpeedControl.style.display = 'none';
+            this.progressiveSpeedControl.style.display = 'block';
+        } else {
+            this.fixedSpeedControl.style.display = 'block';
+            this.progressiveSpeedControl.style.display = 'none';
+        }
+
+        // If playing, restart with new mode
+        if (this.isPlaying) {
+            const currentIndex = this.currentWordIndex;
+            this.pause();
+            this.currentWordIndex = currentIndex;
+            this.play();
+        }
+    }
+
+    updateStartWPM(value) {
+        this.startWpm = parseInt(value);
+        this.startWpmValue.textContent = `${this.startWpm} WPM`;
+
+        // Ensure start is less than target
+        if (this.startWpm > this.targetWpm) {
+            this.targetWpm = this.startWpm + 50;
+            this.targetWpmSlider.value = this.targetWpm;
+            this.targetWpmValue.textContent = `${this.targetWpm} WPM`;
+        }
+    }
+
+    updateTargetWPM(value) {
+        this.targetWpm = parseInt(value);
+        this.targetWpmValue.textContent = `${this.targetWpm} WPM`;
+
+        // Ensure target is greater than start
+        if (this.targetWpm < this.startWpm) {
+            this.startWpm = this.targetWpm - 50;
+            if (this.startWpm < 100) this.startWpm = 100;
+            this.startWpmSlider.value = this.startWpm;
+            this.startWpmValue.textContent = `${this.startWpm} WPM`;
+        }
     }
 
     switchTab(clickedBtn) {
@@ -199,6 +261,20 @@ class RSVPReader {
         }, 5000);
     }
 
+    calculateCurrentWPM() {
+        if (!this.isProgressiveMode) {
+            return this.wpm;
+        }
+
+        // Calculate progress through the text (0 to 1)
+        const progress = this.currentWordIndex / Math.max(1, this.words.length - 1);
+
+        // Linearly interpolate between start and target WPM
+        const currentWpm = this.startWpm + (this.targetWpm - this.startWpm) * progress;
+
+        return Math.round(currentWpm);
+    }
+
     play() {
         if (this.words.length === 0) {
             alert('Please enter some text first!');
@@ -214,18 +290,26 @@ class RSVPReader {
         this.pauseBtn.disabled = false;
 
         this.displayWord();
+        this.scheduleNextWord();
+    }
 
-        const msPerWord = 60000 / this.wpm;
-        this.intervalId = setInterval(() => {
+    scheduleNextWord() {
+        if (!this.isPlaying) return;
+
+        const currentWpm = this.calculateCurrentWPM();
+        const msPerWord = 60000 / currentWpm;
+
+        this.intervalId = setTimeout(() => {
             this.currentWordIndex++;
 
             if (this.currentWordIndex >= this.words.length) {
                 this.pause();
-                this.wordDisplay.textContent = 'Finished! 🎉';
+                this.wordDisplay.innerHTML = 'Finished! 🎉';
                 return;
             }
 
             this.displayWord();
+            this.scheduleNextWord();
         }, msPerWord);
     }
 
@@ -235,7 +319,7 @@ class RSVPReader {
         this.pauseBtn.disabled = true;
 
         if (this.intervalId) {
-            clearInterval(this.intervalId);
+            clearTimeout(this.intervalId);
             this.intervalId = null;
         }
     }
@@ -248,10 +332,36 @@ class RSVPReader {
         this.updateWordCounter();
     }
 
+    getAnchorPosition(word) {
+        // Calculate the optimal recognition point (ORP)
+        // Usually around 1/3 into the word (slightly left of center)
+        const len = word.length;
+
+        if (len === 1) return 0;
+        if (len === 2 || len === 3) return 1;
+        if (len === 4 || len === 5) return 2;
+
+        // For longer words, use 1/3 position
+        return Math.floor(len / 3);
+    }
+
+    formatWordWithAnchor(word) {
+        const anchorPos = this.getAnchorPosition(word);
+
+        const before = word.substring(0, anchorPos);
+        const anchor = word.charAt(anchorPos);
+        const after = word.substring(anchorPos + 1);
+
+        return `${before}<span class="anchor-letter">${anchor}</span>${after}`;
+    }
+
     displayWord() {
         if (this.currentWordIndex < this.words.length) {
             const word = this.words[this.currentWordIndex];
-            this.wordDisplay.textContent = word;
+
+            // Display word with red anchor letter
+            this.wordDisplay.innerHTML = this.formatWordWithAnchor(word);
+
             this.updateProgress();
             this.updateWordCounter();
 
@@ -283,7 +393,15 @@ class RSVPReader {
     }
 
     updateWordCounter() {
-        this.wordCounter.textContent = `${this.currentWordIndex} / ${this.words.length}`;
+        let counterText = `${this.currentWordIndex} / ${this.words.length}`;
+
+        // If in progressive mode and playing, show current WPM
+        if (this.isProgressiveMode && this.isPlaying && this.words.length > 0) {
+            const currentWpm = this.calculateCurrentWPM();
+            counterText += ` • ${currentWpm} WPM`;
+        }
+
+        this.wordCounter.textContent = counterText;
     }
 
     updateWPM(value) {
