@@ -9,8 +9,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>⚡ RSVP Speed Reader</h1>
-            <p class="subtitle">Train your brain to read faster</p>
+            <h1>RSVP SPEED READER</h1>
+            <p class="subtitle">READ FASTER</p>
         </header>
 
         <div class="input-section">
@@ -64,28 +64,79 @@
             </div>
 
             <div class="speed-control">
-                <label for="wpmSlider">
-                    <span class="label-text">Reading Speed</span>
-                    <span id="wpmValue" class="wpm-value">250 WPM</span>
-                </label>
-                <input
-                    type="range"
-                    id="wpmSlider"
-                    min="100"
-                    max="1000"
-                    value="250"
-                    step="25"
-                    class="slider"
-                >
-                <div class="speed-labels">
-                    <span>Slow (100)</span>
-                    <span>Fast (1000)</span>
+                <div class="speed-mode-toggle">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="progressiveMode" class="toggle-checkbox">
+                        <span class="toggle-switch"></span>
+                        <span class="toggle-text">Progressive Speed Increase</span>
+                    </label>
+                </div>
+
+                <div id="fixedSpeedControl" class="speed-section">
+                    <label for="wpmSlider">
+                        <span class="label-text">Reading Speed</span>
+                        <span id="wpmValue" class="wpm-value">250 WPM</span>
+                    </label>
+                    <input
+                        type="range"
+                        id="wpmSlider"
+                        min="100"
+                        max="1000"
+                        value="250"
+                        step="25"
+                        class="slider"
+                    >
+                    <div class="speed-labels">
+                        <span>Slow (100)</span>
+                        <span>Fast (1000)</span>
+                    </div>
+                </div>
+
+                <div id="progressiveSpeedControl" class="speed-section" style="display: none;">
+                    <label for="startWpmSlider">
+                        <span class="label-text">Starting Speed</span>
+                        <span id="startWpmValue" class="wpm-value">200 WPM</span>
+                    </label>
+                    <input
+                        type="range"
+                        id="startWpmSlider"
+                        min="100"
+                        max="1000"
+                        value="200"
+                        step="25"
+                        class="slider"
+                    >
+                    <div class="speed-labels">
+                        <span>100</span>
+                        <span>1000</span>
+                    </div>
+
+                    <label for="targetWpmSlider" style="margin-top: 20px;">
+                        <span class="label-text">Target Speed</span>
+                        <span id="targetWpmValue" class="wpm-value">400 WPM</span>
+                    </label>
+                    <input
+                        type="range"
+                        id="targetWpmSlider"
+                        min="100"
+                        max="1000"
+                        value="400"
+                        step="25"
+                        class="slider"
+                    >
+                    <div class="speed-labels">
+                        <span>100</span>
+                        <span>1000</span>
+                    </div>
+                    <div class="speed-info">
+                        Speed will gradually increase from start to target throughout the article
+                    </div>
                 </div>
             </div>
         </div>
 
         <footer>
-            <p>💡 Tip: Start slow and gradually increase your reading speed</p>
+            <p>START SLOW / BUILD SPEED / TRAIN YOUR BRAIN</p>
         </footer>
     </div>
 
