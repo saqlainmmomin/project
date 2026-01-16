@@ -3,8 +3,9 @@
 
 /* Brutalist Variables */
 :root {
-    --black: #000000;
-    --white: #ffffff;
+    --black: #1F1F1F;
+    --white: #FDFBF7;
+    --bg-gray: #e0e0e0;
     --gray: #808080;
     --light-gray: #d0d0d0;
     --accent: #00ff00;
@@ -20,7 +21,7 @@
 
 body {
     font-family: 'Space Grotesk', 'Arial', sans-serif;
-    background: var(--white);
+    background: var(--bg-gray);
     color: var(--black);
     line-height: 1.4;
     min-height: 100vh;
@@ -35,8 +36,8 @@ body {
 
 /* Header */
 header {
-    background: var(--black);
-    color: var(--white);
+    background: var(--bg-gray);
+    color: var(--black);
     padding: 40px 30px;
     border-bottom: var(--border-width) solid var(--black);
     position: relative;
@@ -62,7 +63,7 @@ header h1 {
 
 /* Input Section */
 .input-section {
-    background: var(--white);
+    background: var(--bg-gray);
     border: var(--border-width) solid var(--black);
     border-top: none;
     padding: 0;
@@ -72,12 +73,12 @@ header h1 {
 .tabs {
     display: flex;
     gap: 0;
-    border-bottom: var(--border-width) solid var(--black);
+    border-bottom: var(--border-width) solid var(--bg-gray);
 }
 
 .tab-btn {
     flex: 1;
-    background: var(--white);
+    background: var(--bg-gray);
     border: none;
     border-right: var(--border-width) solid var(--black);
     color: var(--black);
@@ -119,7 +120,7 @@ textarea {
     padding: 30px;
     font-size: 1rem;
     font-family: 'Space Grotesk', monospace;
-    background: var(--white);
+    background: var(--bg-grey);
     color: var(--black);
     border: none;
     resize: vertical;
@@ -191,7 +192,7 @@ input[type="url"]:focus {
 
 /* Reader Section */
 .reader-section {
-    background: var(--white);
+    background: var(--bg-gray);
     border-left: var(--border-width) solid var(--black);
     border-right: var(--border-width) solid var(--black);
     border-bottom: var(--border-width) solid var(--black);
@@ -200,7 +201,7 @@ input[type="url"]:focus {
 
 /* Display Box */
 .display-box {
-    background: var(--white);
+    background: var(--bg-gray);
     border-bottom: var(--border-width) solid var(--black);
     padding: 80px 40px;
     height: 280px;
@@ -258,19 +259,21 @@ input[type="url"]:focus {
 
 /* Controls */
 .controls {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 30px;
+    background: var(--bg-gray);
     border-bottom: var(--border-width) solid var(--black);
 }
 
 /* Buttons */
 .btn {
-    padding: 25px;
+    padding: 20px 30px;
     font-size: 1rem;
     font-weight: 700;
     font-family: 'Space Grotesk', sans-serif;
-    border: none;
+    border: var(--border-width) solid var(--black);
     cursor: pointer;
     transition: all 0.1s ease;
     display: flex;
@@ -280,11 +283,13 @@ input[type="url"]:focus {
     gap: 8px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    border-right: var(--border-width) solid var(--black);
+    min-width: 120px;
+    box-shadow: 5px 5px 0 var(--black);
 }
 
-.btn:last-child {
-    border-right: none;
+.btn:active:not(:disabled) {
+    transform: translate(3px, 3px);
+    box-shadow: 2px 2px 0 var(--black);
 }
 
 .btn-icon {
@@ -314,15 +319,12 @@ input[type="url"]:focus {
 .btn:disabled {
     opacity: 0.4;
     cursor: not-allowed;
-}
-
-.btn:active:not(:disabled) {
-    transform: translateY(2px);
+    box-shadow: 3px 3px 0 var(--gray);
 }
 
 /* Speed Control */
 .speed-control {
-    background: var(--white);
+    background: var(--bg-gray);
     padding: 40px;
 }
 
@@ -426,7 +428,7 @@ input[type="url"]:focus {
     position: relative;
     width: 60px;
     height: 30px;
-    background: var(--white);
+    background: var(--light-gray);
     border: var(--border-width) solid var(--black);
     transition: all 0.1s ease;
 }
@@ -516,16 +518,13 @@ footer p::before {
     }
 
     .controls {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+        gap: 15px;
     }
 
     .btn {
-        border-right: none;
-        border-bottom: var(--border-width) solid var(--black);
-    }
-
-    .btn:last-child {
-        border-bottom: none;
+        width: 100%;
+        min-width: auto;
     }
 
     .url-input-group {
